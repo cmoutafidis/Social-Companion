@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">SocialCompanion</string>
+    <string name="non_followers">Non Followers</string>
+    <string name="fans">Fans</string>
+    <string name="mutual_following">Mutual Following</string>
+    <string name="all_following">All Following</string>
+    <string name="whitelist">Whitelist</string>
+    <string name="blacklist">Blacklist</string>
+    <string name="general">General</string>
+    <string name="lists">Lists</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+</resources>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <item android:title="@string/general">
+        <menu>
+            <group
+                android:id="@+id/actions"
+                android:checkableBehavior="single">
+                <item
+                    android:id="@+id/non_followers"
+                    android:icon="@drawable/ic_non_followers"
+                    android:title="@string/non_followers" />
+                <item
+                    android:id="@+id/fans"
+                    android:icon="@drawable/ic_fans"
+                    android:title="@string/fans" />
+                <item
+                    android:id="@+id/mutual_following"
+                    android:icon="@drawable/ic_mutual_following"
+                    android:title="@string/mutual_following" />
+                <item
+                    android:id="@+id/all_following"
+                    android:icon="@drawable/ic_all_following"
+                    android:title="@string/all_following" />
+            </group>
+        </menu>
+    </item>
+
+    <item android:title="@string/lists">
+        <menu>
+            <group
+                android:id="@+id/lists"
+                android:checkableBehavior="single">
+                <item
+                    android:id="@+id/whitelist"
+                    android:icon="@drawable/ic_whitelist"
+                    android:title="@string/whitelist" />
+                <item
+                    android:id="@+id/blacklist"
+                    android:icon="@drawable/ic_blacklist"
+                    android:title="@string/blacklist" />
+            </group>
+        </menu>
+    </item>
+
+</menu>
