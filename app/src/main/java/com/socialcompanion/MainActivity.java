@@ -9,7 +9,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.Toast;
+
+import com.socialcompanion.menufragments.AllFollowingFragment;
+import com.socialcompanion.menufragments.BlacklistFragment;
+import com.socialcompanion.menufragments.FansFragment;
+import com.socialcompanion.menufragments.MutualFragment;
+import com.socialcompanion.menufragments.NonFollowersFragment;
+import com.socialcompanion.menufragments.WhitelistFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
