@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -64,9 +65,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         new MutualFragment()).commit();
                 break;
             case R.id.all_following:
-
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new AllFollowingFragment()).commit();
+                break;
+            case R.id.whitelist:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new WhitelistFragment()).commit();
+                break;
+            case R.id.blacklist:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new BlacklistFragment()).commit();
                 break;
         }
 
