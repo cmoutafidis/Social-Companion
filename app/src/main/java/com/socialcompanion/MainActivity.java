@@ -1,5 +1,7 @@
 package com.socialcompanion;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,11 +22,22 @@ import com.socialcompanion.menufragments.WhitelistFragment;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawerLayout;
+    private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        sharedPref = getSharedPreferences("socialAccess", Context.MODE_PRIVATE);
+        editor = sharedPref.edit();
+
+        String accessToken = getIntent().getExtras().getString("access_token");
+        editor.putString("access_token", accessToken);
+        editor.apply();
+
+        HomeActivity.instance.finish();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
