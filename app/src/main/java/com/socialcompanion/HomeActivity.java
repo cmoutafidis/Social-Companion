@@ -11,7 +11,6 @@ import android.widget.Button;
 public class HomeActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPref;
-    private SharedPreferences.Editor editor;
     public static HomeActivity instance;
 
     @Override
@@ -22,7 +21,6 @@ public class HomeActivity extends AppCompatActivity {
         instance = this;
 
         sharedPref = getSharedPreferences("socialAccess", Context.MODE_PRIVATE);
-        editor = sharedPref.edit();
 
         String accessToken = sharedPref.getString("access_token", "");
 

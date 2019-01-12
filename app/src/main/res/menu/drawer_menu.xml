@@ -9,6 +9,10 @@
                 android:id="@+id/actions"
                 android:checkableBehavior="single">
                 <item
+                    android:id="@+id/home"
+                    android:icon="@drawable/ic_home"
+                    android:title="@string/home" />
+                <item
                     android:id="@+id/non_followers"
                     android:icon="@drawable/ic_non_followers"
                     android:title="@string/non_followers" />

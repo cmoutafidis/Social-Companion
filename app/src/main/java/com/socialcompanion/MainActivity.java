@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import com.socialcompanion.menufragments.AllFollowingFragment;
 import com.socialcompanion.menufragments.BlacklistFragment;
 import com.socialcompanion.menufragments.FansFragment;
+import com.socialcompanion.menufragments.HomeFragment;
 import com.socialcompanion.menufragments.MutualFragment;
 import com.socialcompanion.menufragments.NonFollowersFragment;
 import com.socialcompanion.menufragments.WhitelistFragment;
@@ -53,8 +54,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if(savedInstanceState == null){
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new NonFollowersFragment()).commit();
-            navigationView.setCheckedItem(R.id.non_followers);
+                    new HomeFragment()).commit();
+            navigationView.setCheckedItem(R.id.home);
         }
     }
 
@@ -71,6 +72,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
+            case R.id.home:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new HomeFragment()).commit();
+                break;
             case R.id.non_followers:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new NonFollowersFragment()).commit();
