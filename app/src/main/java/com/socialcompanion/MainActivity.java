@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.socialcompanion.menufragments.AllFollowingFragment;
@@ -34,6 +35,8 @@ import com.socialcompanion.service.social.instagramtasks.GetUserTask;
 import com.socialcompanion.service.social.instagramtasks.LoginTask;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -72,15 +75,47 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             e.printStackTrace();
         }
 
+        InstagramAPI.setUsername(username);
+        InstagramAPI.setPassword(password);
+
+        updateUserInformation();
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        this.drawerLayout = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, this.drawerLayout, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        if(savedInstanceState == null){
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    new HomeFragment()).commit();
+            navigationView.setCheckedItem(R.id.home);
+        }
+
+        NavigationView navView = findViewById(R.id.nav_view);
+        View linearLayout = navView.getHeaderView(0);
+        TextView textView = linearLayout.findViewById(R.id.accountName);
+        TextView textView2 = linearLayout.findViewById(R.id.accountEmail);
+        ImageView imageView = linearLayout.findViewById(R.id.accountImage);
+        textView.setText(InstagramAPI.getCurrentUser().getFull_name());
+        textView2.setText(InstagramAPI.getCurrentUser().getUsername());
+        imageView.setImageBitmap(InstagramAPI.getProfilePic());
+    }
+
+    public static void updateUserInformation() {
         GetUserTask getUserTask = new GetUserTask();
         try {
-            InstagramAPI.setCurrentUser(getUserTask.execute(username, password).get());
+            InstagramAPI.setCurrentUser(getUserTask.execute(InstagramAPI.getUsername(), InstagramAPI.getPassword()).get());
             InstagramAPI.setProfilePic(InstagramAPI.getBitmapByUrl(InstagramAPI.getCurrentUser().getProfile_pic_url()));
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
-
-        InstagramUser curUser = InstagramAPI.getCurrentUser();
 
         GetFollowingRequest getFollowingRequest = new GetFollowingRequest();
         try {
@@ -100,32 +135,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             e.printStackTrace();
         }
 
-        List<InstagramUserObject> users = InstagramAPI.getFollowers();
-
-        getUserImages();
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        this.drawerLayout = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, this.drawerLayout, toolbar,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
-
-        if(savedInstanceState == null){
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new HomeFragment()).commit();
-            navigationView.setCheckedItem(R.id.home);
-        }
-    }
-
-    private void getUserImages() {
         List<InstagramUserObject> followers = InstagramAPI.getFollowers();
         List<InstagramUserObject> following = InstagramAPI.getFollowing();
+        InstagramAPI.setNonFollowing(new ArrayList<InstagramUserObject>());
+        InstagramAPI.setNonFollowers(new ArrayList<InstagramUserObject>());
+        InstagramAPI.setMutualFollowing(new ArrayList<InstagramUserObject>());
 
         for (InstagramUserObject curFollower : followers){
             boolean included = false;
@@ -137,7 +151,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             if(!included){
                 InstagramAPI.addToNonFollowing(curFollower);
-                curFollower.setBitmapImage(InstagramAPI.getBitmapByUrl(curFollower.getProfilePicUrl()));
             }
         }
 
@@ -151,11 +164,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             if(!included){
                 InstagramAPI.addToNonFollowers(curFollower);
-                curFollower.setBitmapImage(InstagramAPI.getBitmapByUrl(curFollower.getProfilePicUrl()));
             }
         }
 
-        System.out.println();
+        for (InstagramUserObject curFollower : InstagramAPI.getFollowers()){
+            for (InstagramUserObject curFollowing : InstagramAPI.getFollowing()){
+                if(curFollower.getUsername().equals(curFollowing.getUsername())){
+                    InstagramAPI.addToMutualFollowing(curFollower);
+                }
+            }
+        }
+
+        getUserImages();
+    }
+
+    private static void getUserImages() {
+        List<InstagramUserObject> followers = InstagramAPI.getFollowers();
+        List<InstagramUserObject> following = InstagramAPI.getFollowing();
+
+        for (InstagramUserObject curFollower : followers){
+            curFollower.setBitmapImage(InstagramAPI.getBitmapByUrl(curFollower.getProfilePicUrl()));
+        }
+
+        for (InstagramUserObject curFollower : following){
+            curFollower.setBitmapImage(InstagramAPI.getBitmapByUrl(curFollower.getProfilePicUrl()));
+        }
     }
 
     @Override

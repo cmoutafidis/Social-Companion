@@ -1,6 +1,7 @@
-package com.socialcompanion.service.social.instagram;
+package com.socialcompanion.service.social.instagram.adapters;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +12,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.socialcompanion.R;
+import com.socialcompanion.service.social.instagram.InstagramUserObject;
+import com.socialcompanion.service.social.instagramtasks.FollowRequest;
+import com.socialcompanion.service.social.instagramtasks.UnfollowRequest;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class CustomFollowAdapter extends ArrayAdapter<InstagramUserObject> implements View.OnClickListener{
 
     private ArrayList<InstagramUserObject> dataSet;
     Context mContext;
+    private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editor;
 
     // View lookup cache
     private static class ViewHolder {
@@ -33,6 +40,9 @@ public class CustomFollowAdapter extends ArrayAdapter<InstagramUserObject> imple
         this.dataSet = data;
         this.mContext=context;
 
+        sharedPref = getContext().getSharedPreferences("socialAccess", Context.MODE_PRIVATE);
+        editor = sharedPref.edit();
+
     }
 
     @Override
@@ -42,10 +52,15 @@ public class CustomFollowAdapter extends ArrayAdapter<InstagramUserObject> imple
         Object object= getItem(position);
         InstagramUserObject dataModel=(InstagramUserObject)object;
 
-        switch (v.getId())
-        {
-            case R.id.textView4:
-                break;
+        if(!sharedPref.getStringSet("blacklist", new HashSet<String>()).contains(dataModel.getUsername())){
+            FollowRequest unfollowRequest = new FollowRequest();
+            try {
+                unfollowRequest.execute(dataModel.getUserId()).get();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            remove(dataModel);
         }
     }
 
@@ -82,6 +97,13 @@ public class CustomFollowAdapter extends ArrayAdapter<InstagramUserObject> imple
 
         viewHolder.txtName.setText(dataModel.getUsername());
         viewHolder.info.setImageBitmap(dataModel.getBitmapImage());
+
+        if(sharedPref.getStringSet("blacklist", new HashSet<String>()).contains(dataModel.getUsername())){
+            viewHolder.action.setImageResource(R.drawable.add_disabled);
+        }
+        else{
+            viewHolder.action.setImageResource(R.drawable.ic_add_circle_outline_black_24dp);
+        }
 
         viewHolder.action.setOnClickListener(this);
         viewHolder.action.setTag(position);

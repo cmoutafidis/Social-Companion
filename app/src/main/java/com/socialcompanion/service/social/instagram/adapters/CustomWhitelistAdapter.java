@@ -1,6 +1,7 @@
-package com.socialcompanion.service.social.instagram;
+package com.socialcompanion.service.social.instagram.adapters;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,14 +12,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.socialcompanion.R;
+import com.socialcompanion.service.social.instagram.InstagramUserObject;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 
-public class CustomAdapter extends ArrayAdapter<InstagramUserObject> implements View.OnClickListener{
+public class CustomWhitelistAdapter extends ArrayAdapter<InstagramUserObject> implements View.OnClickListener{
 
     private ArrayList<InstagramUserObject> dataSet;
     Context mContext;
+    private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editor;
 
     // View lookup cache
     private static class ViewHolder {
@@ -29,11 +33,13 @@ public class CustomAdapter extends ArrayAdapter<InstagramUserObject> implements 
         ImageView action;
     }
 
-    public CustomAdapter(ArrayList<InstagramUserObject> data, Context context) {
-        super(context, R.layout.fragment_user_unfollow, data);
+    public CustomWhitelistAdapter(ArrayList<InstagramUserObject> data, Context context) {
+        super(context, R.layout.fragment_user_whitelist, data);
         this.dataSet = data;
         this.mContext=context;
 
+        sharedPref = getContext().getSharedPreferences("socialAccess", Context.MODE_PRIVATE);
+        editor = sharedPref.edit();
     }
 
     @Override
@@ -43,11 +49,21 @@ public class CustomAdapter extends ArrayAdapter<InstagramUserObject> implements 
         Object object= getItem(position);
         InstagramUserObject dataModel=(InstagramUserObject)object;
 
-        switch (v.getId())
-        {
-            case R.id.textView4:
-                break;
+        HashSet<String> hashSet = (HashSet<String>) sharedPref.getStringSet("whitelist", new HashSet<String>());
+
+        if(!sharedPref.getStringSet("whitelist", new HashSet<String>()).contains(dataModel.getUsername())){
+            hashSet.add(dataModel.getUsername());
+            ((ImageView)v.findViewById(R.id.imageView3)).setImageResource(R.drawable.remove_green);
         }
+        else{
+            hashSet.remove(dataModel.getUsername());
+            ((ImageView)v.findViewById(R.id.imageView3)).setImageResource(R.drawable.add_circle_big);
+        }
+
+        editor.remove("whitelist");
+        editor.apply();
+        editor.putStringSet("whitelist", hashSet);
+        editor.apply();
     }
 
     private int lastPosition = -1;
@@ -65,7 +81,7 @@ public class CustomAdapter extends ArrayAdapter<InstagramUserObject> implements 
 
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.fragment_user_unfollow, parent, false);
+            convertView = inflater.inflate(R.layout.fragment_user_whitelist, parent, false);
             viewHolder.txtName = (TextView) convertView.findViewById(R.id.textView4);
             viewHolder.info = (ImageView) convertView.findViewById(R.id.imageView2);
             viewHolder.action = (ImageView) convertView.findViewById(R.id.imageView3);
@@ -83,6 +99,13 @@ public class CustomAdapter extends ArrayAdapter<InstagramUserObject> implements 
 
         viewHolder.txtName.setText(dataModel.getUsername());
         viewHolder.info.setImageBitmap(dataModel.getBitmapImage());
+
+        if(sharedPref.getStringSet("whitelist", new HashSet<String>()).contains(dataModel.getUsername())){
+            viewHolder.action.setImageResource(R.drawable.remove_green);
+        }
+        else{
+            viewHolder.action.setImageResource(R.drawable.add_circle_big);
+        }
 
         viewHolder.action.setOnClickListener(this);
         viewHolder.action.setTag(position);

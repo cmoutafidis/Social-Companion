@@ -18,6 +18,8 @@ public class InstagramAPI {
 
     private static final String LOGIN_URL = "https://www.instagram.com/oauth/authorize/?client_id=43b993c419f94064b25ed722408807d9&redirect_uri=https://www.google.com&response_type=token";
     private static final String REDIRECT_URL = "https://www.google.com";
+    private static String username;
+    private static String password;
     private static Instagram4Android instagram = null;
     private static Bitmap profilePic;
     private static InstagramUser currentUser;
@@ -25,6 +27,31 @@ public class InstagramAPI {
     private static List<InstagramUserObject> followers;
     private static List<InstagramUserObject> nonFollowers = new ArrayList<>();
     private static List<InstagramUserObject> nonFollowing = new ArrayList<>();
+    private static List<InstagramUserObject> mutualFollowing = new ArrayList<>();
+
+    public static String getUsername() {
+        return username;
+    }
+
+    public static void setUsername(String username) {
+        InstagramAPI.username = username;
+    }
+
+    public static String getPassword() {
+        return password;
+    }
+
+    public static void setPassword(String password) {
+        InstagramAPI.password = password;
+    }
+
+    public static List<InstagramUserObject> getMutualFollowing() {
+        return mutualFollowing;
+    }
+
+    public static void setMutualFollowing(List<InstagramUserObject> mutualFollowing) {
+        InstagramAPI.mutualFollowing = mutualFollowing;
+    }
 
     public static List<InstagramUserObject> getNonFollowers() {
         return nonFollowers;
@@ -44,6 +71,10 @@ public class InstagramAPI {
 
     public static void addToNonFollowers(InstagramUserObject object){
         nonFollowers.add(object);
+    }
+
+    public static void addToMutualFollowing(InstagramUserObject object){
+        mutualFollowing.add(object);
     }
 
     public static void addToNonFollowing(InstagramUserObject object){

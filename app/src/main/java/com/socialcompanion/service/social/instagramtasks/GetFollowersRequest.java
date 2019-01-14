@@ -35,11 +35,11 @@ public class GetFollowersRequest extends AsyncTask<Long, Void, List<InstagramUse
                 object.setUsername(curUser.getUsername());
                 if(curUser.getProfile_pic_id() != null){
                     object.setUserId(Long.parseLong(curUser.getProfile_pic_id().split("_")[1]));
+                    users.add(object);
                 }
                 else{
                     System.out.println();
                 }
-                users.add(object);
             }
             return users;
         } catch (IOException e) {

@@ -15,9 +15,10 @@
         tools:replace="android:icon">
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".WebPageActivity" android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".HomeActivity" android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".WebPageActivity" android:screenOrientation="portrait"  android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".HomeActivity" android:screenOrientation="portrait"  android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
