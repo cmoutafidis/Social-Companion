@@ -6,10 +6,13 @@ import android.widget.ImageView;
 import com.socialcompanion.service.social.instagramtasks.DownloadImageTask;
 import com.socialcompanion.service.social.instagramtasks.DownloadWithoutSetImageTask;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import dev.niekirk.com.instagram4android.Instagram4Android;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUser;
+import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 
 public class InstagramAPI {
 
@@ -17,6 +20,51 @@ public class InstagramAPI {
     private static final String REDIRECT_URL = "https://www.google.com";
     private static Instagram4Android instagram = null;
     private static Bitmap profilePic;
+    private static InstagramUser currentUser;
+    private static List<InstagramUserObject> following;
+    private static List<InstagramUserObject> followers;
+    private static List<InstagramUserObject> nonFollowers = new ArrayList<>();
+    private static List<InstagramUserObject> nonFollowing = new ArrayList<>();
+
+    public static List<InstagramUserObject> getNonFollowers() {
+        return nonFollowers;
+    }
+
+    public static void setNonFollowers(List<InstagramUserObject> nonFollowers) {
+        InstagramAPI.nonFollowers = nonFollowers;
+    }
+
+    public static List<InstagramUserObject> getNonFollowing() {
+        return nonFollowing;
+    }
+
+    public static void setNonFollowing(List<InstagramUserObject> nonFollowing) {
+        InstagramAPI.nonFollowing = nonFollowing;
+    }
+
+    public static void addToNonFollowers(InstagramUserObject object){
+        nonFollowers.add(object);
+    }
+
+    public static void addToNonFollowing(InstagramUserObject object){
+        nonFollowing.add(object);
+    }
+
+    public static List<InstagramUserObject> getFollowers() {
+        return followers;
+    }
+
+    public static void setFollowers(List<InstagramUserObject> followers) {
+        InstagramAPI.followers = followers;
+    }
+
+    public static List<InstagramUserObject> getFollowing() {
+        return following;
+    }
+
+    public static void setFollowing(List<InstagramUserObject> following) {
+        InstagramAPI.following = following;
+    }
 
     public static InstagramUser getCurrentUser() {
         return currentUser;
@@ -25,8 +73,6 @@ public class InstagramAPI {
     public static void setCurrentUser(InstagramUser currentUser) {
         InstagramAPI.currentUser = currentUser;
     }
-
-    private static InstagramUser currentUser;
 
     public static Bitmap getProfilePic() {
         return profilePic;

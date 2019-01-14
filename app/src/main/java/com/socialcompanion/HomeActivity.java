@@ -27,8 +27,8 @@ public class HomeActivity extends AppCompatActivity {
 
         if(!username.equals("") && !password.equals("")){
             Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("access_token", username);
-            intent.putExtra("access_token", password);
+            intent.putExtra("username", username);
+            intent.putExtra("password", password);
             this.startActivity(intent);
         }
 

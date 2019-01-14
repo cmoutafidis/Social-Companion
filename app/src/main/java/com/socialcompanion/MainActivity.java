@@ -26,16 +26,22 @@ import com.socialcompanion.menufragments.MutualFragment;
 import com.socialcompanion.menufragments.NonFollowersFragment;
 import com.socialcompanion.menufragments.WhitelistFragment;
 import com.socialcompanion.service.social.instagram.InstagramAPI;
+import com.socialcompanion.service.social.instagram.InstagramUserObject;
+import com.socialcompanion.service.social.instagramtasks.GetFollowersRequest;
+import com.socialcompanion.service.social.instagramtasks.GetFollowingRequest;
+import com.socialcompanion.service.social.instagramtasks.GetUserIdClass;
 import com.socialcompanion.service.social.instagramtasks.GetUserTask;
 import com.socialcompanion.service.social.instagramtasks.LoginTask;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import dev.niekirk.com.instagram4android.Instagram4Android;
 import dev.niekirk.com.instagram4android.requests.InstagramSearchUsernameRequest;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramSearchUsernameResult;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUser;
+import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -74,6 +80,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             e.printStackTrace();
         }
 
+        InstagramUser curUser = InstagramAPI.getCurrentUser();
+
+        GetFollowingRequest getFollowingRequest = new GetFollowingRequest();
+        try {
+            InstagramAPI.setFollowing(getFollowingRequest.execute(Long.parseLong(InstagramAPI.getCurrentUser().getProfile_pic_id().split("_")[1])).get());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        GetFollowersRequest getFollowersRequest = new GetFollowersRequest();
+        try {
+            InstagramAPI.setFollowers(getFollowersRequest.execute(Long.parseLong(InstagramAPI.getCurrentUser().getProfile_pic_id().split("_")[1])).get());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        List<InstagramUserObject> users = InstagramAPI.getFollowers();
+
+        getUserImages();
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -91,6 +121,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     new HomeFragment()).commit();
             navigationView.setCheckedItem(R.id.home);
         }
+    }
+
+    private void getUserImages() {
+        List<InstagramUserObject> followers = InstagramAPI.getFollowers();
+        List<InstagramUserObject> following = InstagramAPI.getFollowing();
+
+        for (InstagramUserObject curFollower : followers){
+            boolean included = false;
+            for (InstagramUserObject curFollowing : following){
+                if(curFollower.getUsername().equals(curFollowing.getUsername())){
+                    included = true;
+                }
+            }
+
+            if(!included){
+                InstagramAPI.addToNonFollowing(curFollower);
+                curFollower.setBitmapImage(InstagramAPI.getBitmapByUrl(curFollower.getProfilePicUrl()));
+            }
+        }
+
+        for (InstagramUserObject curFollower : following){
+            boolean included = false;
+            for (InstagramUserObject curFollowing : followers){
+                if(curFollower.getUsername().equals(curFollowing.getUsername())){
+                    included = true;
+                }
+            }
+
+            if(!included){
+                InstagramAPI.addToNonFollowers(curFollower);
+                curFollower.setBitmapImage(InstagramAPI.getBitmapByUrl(curFollower.getProfilePicUrl()));
+            }
+        }
+
+        System.out.println();
     }
 
     @Override

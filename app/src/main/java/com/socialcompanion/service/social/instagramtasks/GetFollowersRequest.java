@@ -9,11 +9,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.niekirk.com.instagram4android.requests.InstagramGetUserFollowersRequest;
 import dev.niekirk.com.instagram4android.requests.InstagramGetUserFollowingRequest;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramGetUserFollowersResult;
 import dev.niekirk.com.instagram4android.requests.payload.InstagramUserSummary;
 
-public class GetFollowingRequest extends AsyncTask<Long, Void, List<InstagramUserObject>> {
+public class GetFollowersRequest extends AsyncTask<Long, Void, List<InstagramUserObject>> {
 
     @Override
     protected void onPreExecute() {
@@ -26,7 +27,7 @@ public class GetFollowingRequest extends AsyncTask<Long, Void, List<InstagramUse
         InstagramGetUserFollowersResult result = null;
         try {
             List<InstagramUserObject> users = new ArrayList<>();
-            result = InstagramAPI.getInstagram().sendRequest(new InstagramGetUserFollowingRequest(ids[0]));
+            result = InstagramAPI.getInstagram().sendRequest(new InstagramGetUserFollowersRequest(ids[0]));
             for(InstagramUserSummary curUser : result.getUsers()){
                 InstagramUserObject object = new InstagramUserObject();
                 object.setProfilePicUrl(curUser.getProfile_pic_url());

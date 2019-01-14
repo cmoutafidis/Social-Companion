@@ -7,14 +7,36 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.socialcompanion.R;
+import com.socialcompanion.service.social.instagram.CustomAdapter;
+import com.socialcompanion.service.social.instagram.CustomFollowAdapter;
+import com.socialcompanion.service.social.instagram.InstagramAPI;
+import com.socialcompanion.service.social.instagram.InstagramUserObject;
+
+import java.util.ArrayList;
 
 public class FansFragment extends Fragment {
+
+    ArrayList<InstagramUserObject> dataModels;
+    ListView listView;
+    private static CustomFollowAdapter adapter;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_fans, container, false);
+        View view = inflater.inflate(R.layout.fragment_fans, container, false);
+
+        listView = view.findViewById(R.id.list);
+        dataModels= new ArrayList<>();
+
+        dataModels.addAll(InstagramAPI.getNonFollowing());
+
+        adapter= new CustomFollowAdapter(dataModels,getContext());
+
+        listView.setAdapter(adapter);
+
+        return view;
     }
 }
