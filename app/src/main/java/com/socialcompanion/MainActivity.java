@@ -2,6 +2,7 @@ package com.socialcompanion;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -10,7 +11,12 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.socialcompanion.menufragments.AllFollowingFragment;
 import com.socialcompanion.menufragments.BlacklistFragment;
@@ -19,6 +25,17 @@ import com.socialcompanion.menufragments.HomeFragment;
 import com.socialcompanion.menufragments.MutualFragment;
 import com.socialcompanion.menufragments.NonFollowersFragment;
 import com.socialcompanion.menufragments.WhitelistFragment;
+import com.socialcompanion.service.social.instagram.InstagramAPI;
+import com.socialcompanion.service.social.instagramtasks.GetUserTask;
+import com.socialcompanion.service.social.instagramtasks.LoginTask;
+
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+
+import dev.niekirk.com.instagram4android.Instagram4Android;
+import dev.niekirk.com.instagram4android.requests.InstagramSearchUsernameRequest;
+import dev.niekirk.com.instagram4android.requests.payload.InstagramSearchUsernameResult;
+import dev.niekirk.com.instagram4android.requests.payload.InstagramUser;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -34,11 +51,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         sharedPref = getSharedPreferences("socialAccess", Context.MODE_PRIVATE);
         editor = sharedPref.edit();
 
-        String accessToken = getIntent().getExtras().getString("access_token");
-        editor.putString("access_token", accessToken);
+        String username = getIntent().getExtras().getString("username");
+        editor.putString("username", username);
+        String password = getIntent().getExtras().getString("password");
+        editor.putString("password", password);
         editor.apply();
 
-        HomeActivity.instance.finish();
+        LoginTask loginTask = new LoginTask();
+        try {
+            InstagramAPI.setInstagram(loginTask.execute(username, password).get());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

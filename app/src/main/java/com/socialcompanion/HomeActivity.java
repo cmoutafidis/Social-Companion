@@ -22,11 +22,13 @@ public class HomeActivity extends AppCompatActivity {
 
         sharedPref = getSharedPreferences("socialAccess", Context.MODE_PRIVATE);
 
-        String accessToken = sharedPref.getString("access_token", "");
+        String username = sharedPref.getString("username", "");
+        String password = sharedPref.getString("password", "");
 
-        if(!accessToken.equals("")){
+        if(!username.equals("") && !password.equals("")){
             Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("access_token", accessToken);
+            intent.putExtra("access_token", username);
+            intent.putExtra("access_token", password);
             this.startActivity(intent);
         }
 
