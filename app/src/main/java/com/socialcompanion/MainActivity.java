@@ -57,9 +57,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         editor.putString("password", password);
         editor.apply();
 
+        HomeActivity.instance.finish();
+
         LoginTask loginTask = new LoginTask();
         try {
             InstagramAPI.setInstagram(loginTask.execute(username, password).get());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        GetUserTask getUserTask = new GetUserTask();
+        try {
+            InstagramAPI.setCurrentUser(getUserTask.execute(username, password).get());
+            InstagramAPI.setProfilePic(InstagramAPI.getBitmapByUrl(InstagramAPI.getCurrentUser().getProfile_pic_url()));
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }

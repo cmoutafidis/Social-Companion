@@ -22,7 +22,7 @@ public class GetUserTask extends AsyncTask<String, Void, InstagramUser> {
     protected InstagramUser doInBackground(String... strings) {
         InstagramSearchUsernameResult result = null;
         try {
-            result = InstagramAPI.getInstagram().sendRequest(new InstagramSearchUsernameRequest("charismoutafidis"));
+            result = InstagramAPI.getInstagram().sendRequest(new InstagramSearchUsernameRequest(strings[0]));
             return result.getUser();
         } catch (IOException e) {
             e.printStackTrace();

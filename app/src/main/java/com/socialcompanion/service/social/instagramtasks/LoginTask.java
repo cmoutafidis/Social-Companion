@@ -19,10 +19,7 @@ public class LoginTask extends AsyncTask<String, Void, Instagram4Android> {
         InstagramLoginResult result = null;
         instagram.setup();
         try {
-            while(result == null || !result.getStatus().equals("ok")){
-                result = instagram.login();
-                System.out.println();
-            }
+            result = instagram.login();
         } catch (Exception e) {
             e.printStackTrace();
         }
