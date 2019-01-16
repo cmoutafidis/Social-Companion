@@ -31,6 +31,8 @@ public class BlacklistFragment extends Fragment implements SwipeRefreshLayout.On
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_blacklist, container, false);
 
+        ((MainActivity)getActivity()).setActionBarTitle("Blacklist");
+
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.pullToRefresh).findViewById(R.id.pullToRefresh2);
         swipeLayout.setOnRefreshListener(this);
 

@@ -31,6 +31,8 @@ public class MutualFragment extends Fragment implements SwipeRefreshLayout.OnRef
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mutual, container, false);
 
+        ((MainActivity)getActivity()).setActionBarTitle("Mutual Connection");
+
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.pullToRefresh).findViewById(R.id.pullToRefresh2);
         swipeLayout.setOnRefreshListener(this);
 

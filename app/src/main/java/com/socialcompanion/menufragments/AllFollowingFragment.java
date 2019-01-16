@@ -30,6 +30,8 @@ public class AllFollowingFragment extends Fragment implements SwipeRefreshLayout
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_all_following, container, false);
 
+        ((MainActivity)getActivity()).setActionBarTitle("All Following");
+
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.pullToRefresh).findViewById(R.id.pullToRefresh2);
         swipeLayout.setOnRefreshListener(this);
 

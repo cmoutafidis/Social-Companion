@@ -25,6 +25,8 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_home, container, false);
 
+        ((MainActivity)getActivity()).setActionBarTitle("Home");
+
         this.inflater = inflater;
         swipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.pullToRefresh);
         swipeLayout.setOnRefreshListener(this);

@@ -108,6 +108,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         imageView.setImageBitmap(InstagramAPI.getProfilePic());
     }
 
+    public void setActionBarTitle(String title){
+        getSupportActionBar().setTitle(title);
+    }
+
     public static void updateUserInformation() {
         GetUserTask getUserTask = new GetUserTask();
         try {
